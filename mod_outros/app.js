@@ -2153,6 +2153,18 @@ class customAPP {
                 CloseEntry: clsEntry,
                 ManualBooking: true,
                 IntermediateReport: ux.getElement("chkFinaliza").checked == true ? false : true,
+                Issue: {
+                  Lines: [{
+                    ItemCode: lote.toString().split("*")[2],
+                    WhsCode: lote.toString().split("*")[3],
+                    BaseLineNumber2: parseInt(lote.toString().split("*")[4]),
+                    Quantity: parseFloat(qtdMP),
+                    BatchNumbers: [{
+                      DistNumber: lote.toString().split("*")[0],
+                      Quantity: parseFloat(qtdMP)
+                    }]
+                  }]
+                },
                 Receipt: receipt
                 /*Receipt: {
                  Lines: [{
@@ -2245,25 +2257,20 @@ class customAPP {
               */
 
 
-              if (await this.execSave('issuewo', saida)) {
-                if (await this.execSave('receiptwo', sucata)) {
-                  if (await this.execSave('TimeReceipt', bsl)) {
-                    if ((ux.getElement("txtItemAprov").value != '' && ux.getElement("txtItemAprov").value != null)
-                      && ux.getElement("txtQuantAprov").value > 0) {
-                      await app.execAproveitamento(lote.toString().split("*")[2], lote.toString().split("*")[0], pesoSaidaAprov, ux.getElement("txtItemAprov").value, quantEntradaAprov, op, pos)
-                    }
-                    msg = "Apontamento realizado com sucesso."
-                  } else {
-                    erro = true
-                    msg = "Erro ao apontar produto acabado."
+              if (await this.execSave('receiptwo', sucata)) {
+                if (await this.execSave('TimeReceipt', bsl)) {
+                  if ((ux.getElement("txtItemAprov").value != '' && ux.getElement("txtItemAprov").value != null)
+                    && ux.getElement("txtQuantAprov").value > 0) {
+                    await app.execAproveitamento(lote.toString().split("*")[2], lote.toString().split("*")[0], pesoSaidaAprov, ux.getElement("txtItemAprov").value, quantEntradaAprov, op, pos)
                   }
+                  msg = "Apontamento realizado com sucesso."
                 } else {
                   erro = true
-                  msg = "Erro ao apontar sucata."
+                  msg = "Erro ao apontar produto acabado."
                 }
               } else {
                 erro = true
-                msg = "Erro ao apontar saida."
+                msg = "Erro ao apontar sucata."
               }
 
               /*
